@@ -26,12 +26,24 @@ void add_contact()
         return;
     }
 
+    // 入力バッファをクリアして、前回の入力の残りを削除
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+    {
+        // 何もしない
+    }
+
     printf("名前を入力してください: ");
-    scanf("%s", contacts[contact_count].name);
+    fgets(contacts[contact_count].name, sizeof(contacts[contact_count].name), stdin);
+    contacts[contact_count].name[strcspn(contacts[contact_count].name, "\n")] = '\0';
+
     printf("電話番号を入力してください: ");
-    scanf("%s", contacts[contact_count].phone);
+    fgets(contacts[contact_count].phone, sizeof(contacts[contact_count].phone), stdin);
+    contacts[contact_count].phone[strcspn(contacts[contact_count].phone, "\n")] = '\0';
+
     printf("メールアドレスを入力してください: ");
-    scanf("%s", contacts[contact_count].email);
+    fgets(contacts[contact_count].email, sizeof(contacts[contact_count].email), stdin);
+    contacts[contact_count].email[strcspn(contacts[contact_count].email, "\n")] = '\0';
 
     contact_count++;
     printf("連絡先が追加されました\n");
@@ -46,7 +58,7 @@ void list_contacts()
         return;
     }
 
-    printf("=== 連絡先一覧 ===\n");
+    printf("\n=== 連絡先一覧 ===\n");
     for (int i = 0; i < contact_count; i++)
     {
         printf("No.%d 名前: %s, 電話番号: %s, メール: %s\n",
@@ -55,14 +67,17 @@ void list_contacts()
 }
 
 // データをファイルに保存
-void save_contacts() {
+void save_contacts()
+{
     FILE *file = fopen("contacts.txt", "w");
-    if (file == NULL) {
-        printf("ファイルの保存に失敗しました。\n");
+    if (file == NULL)
+    {
+        printf("ファイルの保存に失敗しました\n");
         return;
     }
 
-    for (int i = 0; i < contact_count; i++) {
+    for (int i = 0; i < contact_count; i++)
+    {
         fprintf(file, "%s,%s,%s\n", contacts[i].name, contacts[i].phone, contacts[i].email);
     }
 
@@ -71,9 +86,11 @@ void save_contacts() {
 }
 
 // データをファイルから読み込む
-void load_contacts() {
+void load_contacts()
+{
     FILE *file = fopen("contacts.txt", "r");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("保存されたデータはありません\n");
         return;
     }
@@ -82,7 +99,8 @@ void load_contacts() {
     while (fscanf(file, "%49[^,],%19[^,],%49[^\n]\n",
                   contacts[contact_count].name,
                   contacts[contact_count].phone,
-                  contacts[contact_count].email) != EOF) {
+                  contacts[contact_count].email) != EOF)
+    {
         contact_count++;
     }
 
