@@ -17,7 +17,25 @@ typedef struct
 Contact contacts[MAX_CONTACTS];
 int contact_count = 0;
 
+// 連絡先を追加
+void add_contact()
+{
+    if (contact_count >= MAX_CONTACTS)
+    {
+        printf("連絡先リストがいっぱいです\n");
+        return;
+    }
 
+    printf("名前を入力してください: ");
+    scanf("%s", contacts[contact_count].name);
+    printf("電話番号を入力してください: ");
+    scanf("%s", contacts[contact_count].phone);
+    printf("メールアドレスを入力してください: ");
+    scanf("%s", contacts[contact_count].email);
+
+    contact_count++;
+    printf("連絡先が追加されました\n");
+}
 
 void show_menu(void)
 {
@@ -44,6 +62,9 @@ int main(void)
 
         switch (choice)
         {
+        case 1:
+            add_contact();
+            break;
         case 6:
             printf("アプリを終了します\n");
             is_running = 0;
