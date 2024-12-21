@@ -54,6 +54,22 @@ void list_contacts()
     }
 }
 
+// データをファイルに保存
+void save_contacts() {
+    FILE *file = fopen("contacts.txt", "w");
+    if (file == NULL) {
+        printf("ファイルの保存に失敗しました。\n");
+        return;
+    }
+
+    for (int i = 0; i < contact_count; i++) {
+        fprintf(file, "%s,%s,%s\n", contacts[i].name, contacts[i].phone, contacts[i].email);
+    }
+
+    fclose(file);
+    printf("データを保存しました\n");
+}
+
 void show_menu(void)
 {
     printf("\n=== 連絡先管理アプリ ===\n");
@@ -85,7 +101,11 @@ int main(void)
         case 2:
             list_contacts();
             break;
+        case 5:
+            save_contacts();
+            break;
         case 6:
+            save_contacts();
             printf("アプリを終了します\n");
             is_running = 0;
             break;
