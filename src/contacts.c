@@ -70,6 +70,26 @@ void save_contacts() {
     printf("データを保存しました\n");
 }
 
+// データをファイルから読み込む
+void load_contacts() {
+    FILE *file = fopen("contacts.txt", "r");
+    if (file == NULL) {
+        printf("保存されたデータはありません\n");
+        return;
+    }
+
+    contact_count = 0;
+    while (fscanf(file, "%49[^,],%19[^,],%49[^\n]\n",
+                  contacts[contact_count].name,
+                  contacts[contact_count].phone,
+                  contacts[contact_count].email) != EOF) {
+        contact_count++;
+    }
+
+    fclose(file);
+    printf("データを読み込みました\n");
+}
+
 void show_menu(void)
 {
     printf("\n=== 連絡先管理アプリ ===\n");
@@ -85,6 +105,10 @@ void show_menu(void)
 int main(void)
 {
     int is_running = 1;
+
+    // 起動時のデータ読み込み
+    load_contacts();
+
     int choice;
 
     while (is_running)
