@@ -20,7 +20,7 @@ int contact_count = 0;
 // 連絡先を追加
 void add_contact()
 {
-    if (contact_count >= MAX_CONTACTS)
+    if (contact_count >= MAX_CONTACTS) // 未テスト
     {
         printf("連絡先リストがいっぱいです\n");
         return;
@@ -35,6 +35,23 @@ void add_contact()
 
     contact_count++;
     printf("連絡先が追加されました\n");
+}
+
+// 連絡先を一覧表示
+void list_contacts()
+{
+    if (contact_count == 0)
+    {
+        printf("連絡先が登録されていません\n");
+        return;
+    }
+
+    printf("=== 連絡先一覧 ===\n");
+    for (int i = 0; i < contact_count; i++)
+    {
+        printf("No.%d 名前: %s, 電話番号: %s, メール: %s\n",
+               i + 1, contacts[i].name, contacts[i].phone, contacts[i].email);
+    }
 }
 
 void show_menu(void)
@@ -64,6 +81,9 @@ int main(void)
         {
         case 1:
             add_contact();
+            break;
+        case 2:
+            list_contacts();
             break;
         case 6:
             printf("アプリを終了します\n");
