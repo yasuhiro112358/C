@@ -22,3 +22,25 @@ gcc src/solve_linear_equation.c -o build/a.out -llapack -lblas
 # 内部的にBLASを使用しているため、BLASもリンクする必要がある
 ```
 
+
+# SQLite
+```bash
+# version確認
+sqlite3 --version
+
+# shell起動
+sqlite3
+```
+
+```sqlite
+
+
+
+# shell終了
+.quit
+```
+
+
+
+
+
