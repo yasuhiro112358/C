@@ -156,7 +156,7 @@ void update_contact()
     char phone[15];
     char email[100];
 
-    printf("ID: ");
+    printf("Enter ID of the contact to update: ");
     scanf("%d", &id);
 
     // 入力バッファをクリアして、前回の入力の残りを削除
