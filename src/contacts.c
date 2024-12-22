@@ -27,6 +27,7 @@ char *err_msg = 0;
 // Function prototype
 void add_contact(void);
 void list_contacts(void);
+void update_contact(void);
 void save_contacts(void);
 void load_contacts(void);
 void show_menu(void);
@@ -135,6 +136,71 @@ void list_contacts()
     sqlite3_finalize(stmt);
 }
 
+void update_contact()
+{
+    sqlite3_stmt *stmt;
+    const char *sql = "UPDATE contacts SET name = ?, phone = ?, email = ? WHERE id = ?;";
+
+    // プリペアードステートメントを準備
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    // ユーザー入力を取得
+    int id;
+    char name[100];
+    char phone[15];
+    char email[100];
+
+    printf("ID: ");
+    scanf("%d", &id);
+
+    // 入力バッファをクリアして、前回の入力の残りを削除
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+    {
+        // 何もしない
+    }
+
+    printf("New Name: ");
+    fgets(name, sizeof(name), stdin);
+    name[strcspn(name, "\n")] = '\0'; // 改行削除
+
+    printf("New Phone: ");
+    fgets(phone, sizeof(phone), stdin);
+    phone[strcspn(phone, "\n")] = '\0'; // 改行削除
+
+    printf("New Email: ");
+    fgets(email, sizeof(email), stdin);
+    email[strcspn(email, "\n")] = '\0'; // 改行削除
+
+    // validationを追加したい
+
+    // 値をバインド
+    sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, phone, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, email, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, id);
+
+    // ステートメントを実行
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+    else
+    {
+        printf("Contact updated successfully!\n");
+    }
+
+    // ステートメントを解放
+    sqlite3_finalize(stmt);
+}
+
 // データをファイルに保存
 void save_contacts()
 {
@@ -184,6 +250,7 @@ void show_menu(void)
     printf("1. 連絡先を追加\n");
     printf("2. 連絡先を一覧表示\n");
     printf("3. 連絡先を検索\n");
+    printf("7. 連絡先を更新\n");
     printf("4. 連絡先を削除\n");
     printf("5. データを保存\n");
     printf("6. 終了\n");
@@ -262,6 +329,9 @@ int main(void)
             break;
         case 2:
             list_contacts();
+            break;
+        case 7:
+            update_contact();
             break;
         case 5:
             save_contacts();
