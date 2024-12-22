@@ -30,10 +30,27 @@ sqlite3 --version
 
 # shell起動
 sqlite3
+
+# DBを指定してshell起動
+sqlite3 test.db
 ```
 
-```sqlite
-# shell終了
+```sql
+-- デーブル一覧を表示
+.tables
+
+-- テーブルのスキーマ（構造）を表示
+.schema [table_name]
+
+-- データの確認（SQL）
+SELECT * FROM Contacts;
+
+
+-- 表示形式の変更
+.mode column
+.headers on
+
+-- shell終了
 .quit
 ```
 
