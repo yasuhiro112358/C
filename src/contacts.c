@@ -32,6 +32,7 @@ void load_contacts(void);
 void show_menu(void);
 void connect_to_db(void);
 void disconnect_from_db(void);
+void create_table(void);
 
 // 連絡先を追加
 void add_contact()
@@ -139,7 +140,6 @@ void show_menu(void)
 // SQLite3のデータベースに接続
 void connect_to_db()
 {
-    // int rc = sqlite3_open("data/contacts.db", &db);
     int rc = sqlite3_open(DB_FILENAME, &db);
     if (rc != SQLITE_OK)
     {
@@ -162,10 +162,32 @@ void disconnect_from_db()
     }
 };
 
-// Main function
+// SQLite3のデータベースにテーブルを作成
+void create_table(void)
+{
+    char *sql = "CREATE TABLE IF NOT EXISTS contacts ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "name TEXT NOT NULL,"
+                "phone TEXT,"
+                "email TEXT NOT NULL);";
+
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    if (rc != SQLITE_OK)
+    {
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+    else
+    {
+        printf("Table created successfully.\n");
+    }
+};
+
+// ==== Main function ====
 int main(void)
 {
     connect_to_db();
+    create_table();
 
     int is_running = 1;
 
