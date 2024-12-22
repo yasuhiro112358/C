@@ -98,18 +98,41 @@ void add_contact()
 // 連絡先を一覧表示
 void list_contacts()
 {
-    if (contact_count == 0)
+    const char *sql = "SELECT * FROM contacts;";
+    sqlite3_stmt *stmt;
+
+    // プリペアードステートメントを準備
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
     {
-        printf("連絡先が登録されていません\n");
-        return;
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(1);
     }
 
+    // 
     printf("\n=== 連絡先一覧 ===\n");
-    for (int i = 0; i < contact_count; i++)
+    printf("ID\tName\t\tPhone\t\tEmail\n");
+    printf("--------------------------------------------\n");
+
+    // 結果セットを繰り返し取得して表示
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
     {
-        printf("No.%d 名前: %s, 電話番号: %s, メール: %s\n",
-               i + 1, contacts[i].name, contacts[i].phone, contacts[i].email);
+        int id = sqlite3_column_int(stmt, 0);                           // IDカラム
+        const char *name = (const char *)sqlite3_column_text(stmt, 1);  // Nameカラム
+        const char *phone = (const char *)sqlite3_column_text(stmt, 2); // Phoneカラム
+        const char *email = (const char *)sqlite3_column_text(stmt, 3); // Emailカラム
+
+        printf("%d\t%-10s\t%-15s\t%s\n", id, name, phone, email);
     }
+
+    if (rc != SQLITE_DONE)
+    {
+        fprintf(stderr, "Failed to retrieve data: %s\n", sqlite3_errmsg(db));
+    }
+
+    // ステートメントを解放
+    sqlite3_finalize(stmt);
 }
 
 // データをファイルに保存
