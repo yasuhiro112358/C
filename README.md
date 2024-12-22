@@ -21,6 +21,9 @@ gcc src/sqlite3.c -o build/a.out -lsqlite3
 # LAPACK: -llapack -lblas
 gcc src/solve_linear_equation.c -o build/a.out -llapack -lblas
 # 内部的にBLASを使用しているため、BLASもリンクする必要がある
+
+# cURL: -lcurl
+gcc src/curl.c -o build/a.out -lcurl
 ```
 
 # SQLite
