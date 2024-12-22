@@ -37,11 +37,22 @@ void create_table(void);
 // 連絡先を追加
 void add_contact()
 {
-    if (contact_count >= MAX_CONTACTS) // 未テスト
+    sqlite3_stmt *stmt;
+    const char *sql = "INSERT INTO contacts (name, phone, email) VALUES (?, ?, ?);";
+
+    // プリペアードステートメントを準備
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
     {
-        printf("連絡先リストがいっぱいです\n");
-        return;
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(1);
     }
+
+    // ユーザー入力を取得
+    char name[100];
+    char phone[15];
+    char email[100];
 
     // 入力バッファをクリアして、前回の入力の残りを削除
     int c;
@@ -50,20 +61,38 @@ void add_contact()
         // 何もしない
     }
 
-    printf("名前を入力してください: ");
-    fgets(contacts[contact_count].name, sizeof(contacts[contact_count].name), stdin);
-    contacts[contact_count].name[strcspn(contacts[contact_count].name, "\n")] = '\0';
+    printf("Name: ");
+    fgets(name, sizeof(name), stdin);
+    name[strcspn(name, "\n")] = '\0'; // 改行削除
 
-    printf("電話番号を入力してください: ");
-    fgets(contacts[contact_count].phone, sizeof(contacts[contact_count].phone), stdin);
-    contacts[contact_count].phone[strcspn(contacts[contact_count].phone, "\n")] = '\0';
+    printf("Phone: ");
+    fgets(phone, sizeof(phone), stdin);
+    phone[strcspn(phone, "\n")] = '\0'; // 改行削除
 
-    printf("メールアドレスを入力してください: ");
-    fgets(contacts[contact_count].email, sizeof(contacts[contact_count].email), stdin);
-    contacts[contact_count].email[strcspn(contacts[contact_count].email, "\n")] = '\0';
+    printf("Email: ");
+    fgets(email, sizeof(email), stdin);
+    email[strcspn(email, "\n")] = '\0'; // 改行削除
 
-    contact_count++;
-    printf("連絡先が追加されました\n");
+    // validationを追加したい
+
+    // 値をバインド
+    sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, phone, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, email, -1, SQLITE_STATIC);
+
+    // ステートメントを実行
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+    else
+    {
+        printf("Contact added successfully!\n");
+    }
+
+    // ステートメントを解放
+    sqlite3_finalize(stmt);
 }
 
 // 連絡先を一覧表示
@@ -113,6 +142,7 @@ void load_contacts()
     }
 
     contact_count = 0;
+
     while (fscanf(file, "%49[^,],%19[^,],%49[^\n]\n",
                   contacts[contact_count].name,
                   contacts[contact_count].phone,
