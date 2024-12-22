@@ -10,18 +10,18 @@ gcc src/main.c -o build/a.out
 ./build/a.out
 ```
 
-## math.hを使用する場合のビルド
+## ライブラリをリンクしてビルド
 ```bash
+# math.h: -lm
 gcc src/math.c -o build/a.out -lm
-# math.hを使用する場合は、リンクオプションに-lmを追加する
-```
 
-## LAPACKを使用する場合のビルド
-```bash
+# SQLite: -lsqlite3
+gcc src/sqlite3.c -o build/a.out -lsqlite3
+
+# LAPACK: -llapack -lblas
 gcc src/solve_linear_equation.c -o build/a.out -llapack -lblas
 # 内部的にBLASを使用しているため、BLASもリンクする必要がある
 ```
-
 
 # SQLite
 ```bash
@@ -33,9 +33,6 @@ sqlite3
 ```
 
 ```sqlite
-
-
-
 # shell終了
 .quit
 ```
