@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sqlite3.h>
 
+// Define constants
 #define MAX_CONTACTS 100
 #define MAX_NAME_LENGTH 50
 #define MAX_PHONE_LENGTH 20
 #define MAX_EMAIL_LENGTH 50
+#define DB_FILENAME "data/contacts.db"
 
+// Define a structure to store contact information
 typedef struct
 {
     char name[MAX_NAME_LENGTH];
@@ -14,8 +18,20 @@ typedef struct
     char email[MAX_EMAIL_LENGTH];
 } Contact;
 
+// Global variables
 Contact contacts[MAX_CONTACTS];
 int contact_count = 0;
+sqlite3 *db;
+char *err_msg = 0;
+
+// Function prototype
+void add_contact(void);
+void list_contacts(void);
+void save_contacts(void);
+void load_contacts(void);
+void show_menu(void);
+void connect_to_db(void);
+void disconnect_from_db(void);
 
 // 連絡先を追加
 void add_contact()
@@ -69,7 +85,7 @@ void list_contacts()
 // データをファイルに保存
 void save_contacts()
 {
-    FILE *file = fopen("contacts.txt", "w");
+    FILE *file = fopen("data/contacts.txt", "w");
     if (file == NULL)
     {
         printf("ファイルの保存に失敗しました\n");
@@ -88,7 +104,7 @@ void save_contacts()
 // データをファイルから読み込む
 void load_contacts()
 {
-    FILE *file = fopen("contacts.txt", "r");
+    FILE *file = fopen("data/contacts.txt", "r");
     if (file == NULL)
     {
         printf("保存されたデータはありません\n");
@@ -120,8 +136,37 @@ void show_menu(void)
     printf("選択: ");
 }
 
+// SQLite3のデータベースに接続
+void connect_to_db()
+{
+    // int rc = sqlite3_open("data/contacts.db", &db);
+    int rc = sqlite3_open(DB_FILENAME, &db);
+    if (rc != SQLITE_OK)
+    {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+    }
+    else
+    {
+        printf("Database opened successfully.\n");
+    }
+};
+
+// SQLite3のデータベースから切断
+void disconnect_from_db()
+{
+    if (db)
+    {
+        sqlite3_close(db);
+        printf("Database connection closed.\n");
+    }
+};
+
+// Main function
 int main(void)
 {
+    connect_to_db();
+
     int is_running = 1;
 
     // 起動時のデータ読み込み
@@ -148,6 +193,7 @@ int main(void)
             break;
         case 6:
             save_contacts();
+            disconnect_from_db();
             printf("アプリを終了します\n");
             is_running = 0;
             break;
