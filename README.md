@@ -9,3 +9,10 @@ gcc src/main.c -o build/a.out
 ```bash
 ./build/a.out
 ```
+
+## LAPACKを使用する場合のビルド
+```bash
+gcc my_program.c -o my_program -llapack -lblas
+# 内部的にBLASを使用しているため、BLASもリンクする必要がある
+```
+
