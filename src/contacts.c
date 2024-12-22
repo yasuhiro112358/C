@@ -28,6 +28,7 @@ char *err_msg = 0;
 void add_contact(void);
 void list_contacts(void);
 void update_contact(void);
+void destroy_contact(void);
 void save_contacts(void);
 void load_contacts(void);
 void show_menu(void);
@@ -201,6 +202,43 @@ void update_contact()
     sqlite3_finalize(stmt);
 }
 
+void destroy_contact()
+{
+    sqlite3_stmt *stmt;
+    const char *sql = "DELETE FROM contacts WHERE id = ?;";
+
+    // プリペアードステートメントを準備
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    // ユーザー入力を取得
+    int id;
+    printf("Enter ID of the contact to delete: ");
+    scanf("%d", &id);
+
+    // 値をバインド
+    sqlite3_bind_int(stmt, 1, id);
+
+    // ステートメントを実行
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+    else
+    {
+        printf("Contact deleted successfully!\n");
+    }
+
+    // ステートメントを解放
+    sqlite3_finalize(stmt);
+}
+
 // データをファイルに保存
 void save_contacts()
 {
@@ -332,6 +370,9 @@ int main(void)
             break;
         case 7:
             update_contact();
+            break;
+        case 4:
+            destroy_contact();
             break;
         case 5:
             save_contacts();
