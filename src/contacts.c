@@ -240,59 +240,59 @@ void destroy_contact()
 }
 
 // データをファイルに保存
-void save_contacts()
-{
-    FILE *file = fopen("data/contacts.txt", "w");
-    if (file == NULL)
-    {
-        printf("ファイルの保存に失敗しました\n");
-        return;
-    }
+// void save_contacts()
+// {
+//     FILE *file = fopen("data/contacts.txt", "w");
+//     if (file == NULL)
+//     {
+//         printf("ファイルの保存に失敗しました\n");
+//         return;
+//     }
 
-    for (int i = 0; i < contact_count; i++)
-    {
-        fprintf(file, "%s,%s,%s\n", contacts[i].name, contacts[i].phone, contacts[i].email);
-    }
+//     for (int i = 0; i < contact_count; i++)
+//     {
+//         fprintf(file, "%s,%s,%s\n", contacts[i].name, contacts[i].phone, contacts[i].email);
+//     }
 
-    fclose(file);
-    printf("データを保存しました\n");
-}
+//     fclose(file);
+//     printf("データを保存しました\n");
+// }
 
 // データをファイルから読み込む
-void load_contacts()
-{
-    FILE *file = fopen("data/contacts.txt", "r");
-    if (file == NULL)
-    {
-        printf("保存されたデータはありません\n");
-        return;
-    }
+// void load_contacts()
+// {
+//     FILE *file = fopen("data/contacts.txt", "r");
+//     if (file == NULL)
+//     {
+//         printf("保存されたデータはありません\n");
+//         return;
+//     }
 
-    contact_count = 0;
+//     contact_count = 0;
 
-    while (fscanf(file, "%49[^,],%19[^,],%49[^\n]\n",
-                  contacts[contact_count].name,
-                  contacts[contact_count].phone,
-                  contacts[contact_count].email) != EOF)
-    {
-        contact_count++;
-    }
+//     while (fscanf(file, "%49[^,],%19[^,],%49[^\n]\n",
+//                   contacts[contact_count].name,
+//                   contacts[contact_count].phone,
+//                   contacts[contact_count].email) != EOF)
+//     {
+//         contact_count++;
+//     }
 
-    fclose(file);
-    printf("データを読み込みました\n");
-}
+//     fclose(file);
+//     printf("データを読み込みました\n");
+// }
 
 void show_menu(void)
 {
     printf("\n=== 連絡先管理アプリ ===\n");
     printf("1. 連絡先を追加\n");
     printf("2. 連絡先を一覧表示\n");
-    printf("3. 連絡先を検索\n");
+    // printf("3. 連絡先を検索\n");
     printf("7. 連絡先を更新\n");
     printf("4. 連絡先を削除\n");
-    printf("5. データを保存\n");
+    // printf("5. データを保存\n");
     printf("6. 終了\n");
-    printf("選択: ");
+    printf("\nSelect menu number: ");
 }
 
 // SQLite3のデータベースに接続
@@ -350,7 +350,7 @@ int main(void)
     int is_running = 1;
 
     // 起動時のデータ読み込み
-    load_contacts();
+    // load_contacts();
 
     int choice;
 
@@ -374,11 +374,11 @@ int main(void)
         case 4:
             destroy_contact();
             break;
-        case 5:
-            save_contacts();
-            break;
+        // case 5:
+        //     save_contacts();
+        //     break;
         case 6:
-            save_contacts();
+            // save_contacts();
             disconnect_from_db();
             printf("アプリを終了します\n");
             is_running = 0;
