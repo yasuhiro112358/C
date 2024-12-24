@@ -1,3 +1,6 @@
+#include "../../include/plugin.h" // 共通ヘッダファイル
+#include "./contacts.h" // 固有ヘッダファイル
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +11,7 @@
 #define MAX_NAME_LENGTH 50
 #define MAX_PHONE_LENGTH 20
 #define MAX_EMAIL_LENGTH 50
-#define DB_FILENAME "data/contacts.db"
+#define DB_FILENAME "./data/contacts.db"
 
 // Define a structure to store contact information
 typedef struct
@@ -291,7 +294,7 @@ void show_menu(void)
     printf("7. 連絡先を更新\n");
     printf("4. 連絡先を削除\n");
     // printf("5. データを保存\n");
-    printf("6. 終了\n");
+    printf("0. 終了\n");
     printf("\nSelect menu number: ");
 }
 
@@ -301,12 +304,12 @@ void connect_to_db()
     int rc = sqlite3_open(DB_FILENAME, &db);
     if (rc != SQLITE_OK)
     {
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        fprintf(stderr, "Error: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
     }
     else
     {
-        printf("Database opened successfully.\n");
+        printf("Database opened successfully\n");
     }
 };
 
@@ -316,7 +319,7 @@ void disconnect_from_db()
     if (db)
     {
         sqlite3_close(db);
-        printf("Database connection closed.\n");
+        printf("Database connection closed\n");
     }
 };
 
@@ -335,14 +338,14 @@ void create_table(void)
         fprintf(stderr, "SQL error: %s\n", err_msg);
         sqlite3_free(err_msg);
     }
-    else
-    {
-        printf("Table created successfully.\n");
-    }
+    // else
+    // {
+    //     printf("Table created successfully.\n");
+    // }
 };
 
 // ==== Main function ====
-int main(void)
+void run(void)
 {
     connect_to_db();
     create_table();
@@ -377,10 +380,10 @@ int main(void)
         // case 5:
         //     save_contacts();
         //     break;
-        case 6:
+        case 0:
             // save_contacts();
             disconnect_from_db();
-            printf("アプリを終了します\n");
+            printf("Closing contacts app...\n");
             is_running = 0;
             break;
         default:
@@ -389,5 +392,5 @@ int main(void)
         }
     }
 
-    return 0;
+    // return 0;
 }
