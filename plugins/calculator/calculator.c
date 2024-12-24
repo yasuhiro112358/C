@@ -2,7 +2,6 @@
 #include "./calculator.h" // 固有ヘッダファイル
 #include <stdio.h>
 
-
 void test(void) {
     printf("テスト関数が呼び出されました\n");
 }
