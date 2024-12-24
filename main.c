@@ -1,6 +1,6 @@
+#include "./include/plugin_loader.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include "plugin_loader.h"
 
 int main(void)
 {

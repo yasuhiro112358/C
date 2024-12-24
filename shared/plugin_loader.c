@@ -1,4 +1,4 @@
-#include "plugin_loader.h"
+#include "../include/plugin_loader.h"
 #include <stdio.h>
 #include <dlfcn.h>   // 動的ライブラリ（DL）用ヘッダー
 
