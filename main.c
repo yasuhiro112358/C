@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "plugin_loader.h"
 
 int main(void)
 {
@@ -19,7 +20,7 @@ int main(void)
         switch (choice)
         {
         case 1:
-            // load_and_run_plugin("calculator");
+            load_and_run_plugin("calculator");
             break;
         case 2:
             // load_and_run_plugin("contacts");
