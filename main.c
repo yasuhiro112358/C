@@ -12,7 +12,7 @@ int main(void)
         printf("\n=== Main Menu ===\n");
         printf("1. Contacts\n");
         printf("2. Calculator\n");
-        printf("3. データベース操作\n");
+        printf("3. ToDo list\n");
         printf("0. 終了\n");
         printf("\nSelect menu number: ");
         scanf("%d", &choice);
@@ -26,7 +26,7 @@ int main(void)
             load_and_run_plugin("calculator");
             break;
         case 3:
-            // load_and_run_plugin("database");
+            load_and_run_plugin("to_do_list");
             break;
         case 0:
             printf("Closing the app...\n");

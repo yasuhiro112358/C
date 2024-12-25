@@ -13,7 +13,7 @@ build: lib$(PLUGIN_NAME).so
 
 # .oファイルをリンクして共有ライブラリ（.so）を作成
 lib$(PLUGIN_NAME).so: $(OBJ)
-	gcc -shared -o lib$(PLUGIN_NAME).so $(OBJ)
+	gcc -shared -o lib$(PLUGIN_NAME).so $(OBJ) `pkg-config --cflags --libs libxml-2.0`
 
 # .cファイルを.oファイルにコンパイル
 # -fPIC: 位置非依存コードを生成
