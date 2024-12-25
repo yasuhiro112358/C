@@ -1,7 +1,7 @@
 .PHONY: all build clean
 
-PLUGIN_NAME = to_do_list
-SRC = to_do_list.c
+PLUGIN_NAME = tasks
+SRC = tasks.c
 # SRCの'.c'を'.o'に置換
 OBJ = $(SRC:.c=.o) 
 
