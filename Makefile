@@ -3,10 +3,12 @@
 .PHONY: build_main build_plugins
 .PHONY: build_calculator
 .PHONY: build_contacts
+.PHONY: build_to_do_list
 
 .PHONY: clean_main clean_plugins
 .PHONY: clean_calculator
 .PHONY: clean_contacts
+.PHONY: clean_to_do_list
 
 # ==== Default target ====
 all: build run
@@ -18,7 +20,7 @@ build_main: ./main.c ./shared/plugin_loader.c
 	mkdir -p ./build
 	gcc -o ./build/main ./main.c ./shared/plugin_loader.c -ldl
 
-build_plugins: build_calculator build_contacts
+build_plugins: build_calculator build_contacts build_to_do_list
 
 # $(MAKE)は、makeコマンドを呼び出すための特殊な変数
 # -Cオプションは、指定されたディレクトリに移動してからコマンドを実行する
@@ -27,6 +29,9 @@ build_calculator:
 
 build_contacts:
 	$(MAKE) -C plugins/contacts all
+
+build_to_do_list:
+	$(MAKE) -C plugins/to_do_list all
 # ======================
 
 # ==== Run target ====
@@ -40,11 +45,14 @@ clean: clean_main clean_plugins
 clean_main:
 	rm -rf ./build/*
 
-clean_plugins: clean_calculator clean_contacts
+clean_plugins: clean_calculator clean_contacts clean_to_do_list
 
 clean_calculator:
 	$(MAKE) -C plugins/calculator clean
 
 clean_contacts:
 	$(MAKE) -C plugins/contacts clean
+
+clean_to_do_list:
+	$(MAKE) -C plugins/to_do_list clean
 # ======================
