@@ -44,6 +44,33 @@ xmlDocPtr load_xml_file()
     return doc;
 }
 
+void list_tasks(void)
+{
+    xmlDocPtr doc = load_xml_file();
+    xmlNodePtr root = xmlDocGetRootElement(doc);
+    xmlNodePtr task = root->children;
+
+    printf("\n=== Task List ===\n");
+    while (task != NULL)
+    {
+        if (task->type == XML_ELEMENT_NODE && strcmp((char *)task->name, "task") == 0)
+        {
+            xmlChar *id = xmlGetProp(task, BAD_CAST "id");
+            xmlChar *title = xmlNodeGetContent(task->children);
+            printf("[%s] %s\n", id, title);
+
+            // ProtoType: void xmlFree(void *mem)
+            // mem: ptr to memory to free 
+            xmlFree(id);
+            xmlFree(title);
+        }
+        task = task->next;
+    }
+    printf("=================\n");
+
+    xmlFreeDoc(doc);
+}
+
 void add_task(void)
 {
     char title[128];
@@ -101,8 +128,8 @@ void run(void)
 
         switch (choice)
         {
-        case 1:
-            // list_tasks(FILE_PATH);
+        case 1: // List tasks
+            list_tasks();
             break;
         case 2: // Add a new task
             add_task();
